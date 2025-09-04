@@ -61,7 +61,7 @@ PROCESS_DATA <- function(
 
   df.wq <- df.wq |>
     mutate(
-      SampleDateTime = as_datetime(DateTimeET),
+      DateTimeET = as_datetime(DateTimeET, tz="America/New_York"),
       #coerce to datetime class and rename to match DB
       "Probe_Type" = "YSI_EXO2_MWRABuoy",
       #create 'Probe_Type' col to match DB
@@ -115,9 +115,9 @@ PROCESS_DATA <- function(
 
   #create col 'UniqueID'
   df.wq$UniqueID <- paste(
-    #combine 'Station', 'SampleDateTime', 'FinalResult', and first 3 letters of 'Parameter' to form 'UniqueID' col
+    #combine 'Station', 'DateTimeET', 'FinalResult', and first 3 letters of 'Parameter' to form 'UniqueID' col
     df.wq$Station,
-    df.wq$SampleDateTime,
+    df.wq$DateTimeET,
     df.wq$FinalResult,
     substr(df.wq$Parameter, 1, 3),
     sep = "_"
@@ -181,8 +181,8 @@ PROCESS_DATA <- function(
 
   # DataSourceID
   df.wq <- df.wq |>
-    #arrange rows by increasing "SampleDateTime'
-    arrange(SampleDateTime) |>
+    #arrange rows by increasing "DateTimeET'
+    arrange(DateTimeET) |>
     #create 'DataSourceID' col from numeric sequence of rows
     mutate(DataSourceID = seq(1, nrow(df.wq), 1))
 
